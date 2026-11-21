@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>事務サポートの作業見本</title>
+<meta name="description" content="AI（Claude Code）を使って進める事務・LINE公式アカウント構築の作業見本（架空のデータ）">
+<style>
+:root{
+  --bg:#f6f7f9; --card:#ffffff; --ink:#1f2933; --sub:#5b6673; --line:#e3e7ec;
+  --accent:#1f6feb; --accent-soft:#eaf2ff; --ok:#1a7f37; --ok-soft:#e8f5ec; --warn:#9a6700; --warn-soft:#fff6db;
+  --line-green:#06c755; --radius:12px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP",Meiryo,sans-serif;line-height:1.75;font-size:15px}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px}
+header{background:var(--card);border-bottom:1px solid var(--line)}
+header .wrap{padding-top:32px;padding-bottom:28px}
+h1{font-size:24px;line-height:1.4;margin:0 0 8px}
+.lead{color:var(--sub);margin:0 0 16px}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.tags li{font-size:12.5px;padding:4px 10px;border:1px solid var(--line);border-radius:999px;background:var(--bg);color:var(--sub)}
+nav.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+nav.toc a{font-size:13px;color:var(--accent);text-decoration:none;padding:6px 12px;border-radius:8px;background:var(--accent-soft)}
+section{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px 18px;margin:20px 0}
+section h2{font-size:19px;margin:0 0 4px;line-height:1.45}
+section h2 .no{display:inline-block;min-width:28px;color:var(--accent)}
+.what{color:var(--sub);margin:0 0 14px;font-size:14px}
+.point{background:var(--bg);border-radius:8px;padding:10px 12px;font-size:13.5px;color:var(--sub);margin-top:14px}
+.point b{color:var(--ink)}
+.toggle{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:12px}
+.toggle button{font:inherit;font-size:13px;border:0;background:var(--card);color:var(--sub);padding:7px 14px;cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.memo{white-space:pre-wrap;background:var(--bg);border:1px dashed var(--line);border-radius:8px;padding:14px;font-size:14px}
+.grid3{display:grid;gap:12px}
+@media(min-width:760px){.grid3{grid-template-columns:repeat(3,1fr)}}
+.box{border:1px solid var(--line);border-radius:10px;padding:12px}
+.box h3{font-size:14px;margin:0 0 6px}
+.box.ok h3{color:var(--ok)} .box.todo h3{color:var(--accent)} .box.ask h3{color:var(--warn)}
+.box ul{margin:0;padding-left:18px;font-size:14px}
+.tbl{width:100%;max-width:100%;overflow-x:auto}
+.sheet-wrap>*,.line-wrap>*,.grid3>*{min-width:0}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top;overflow-wrap:break-word;word-break:normal}
+th{background:var(--bg);font-weight:600;color:var(--sub);white-space:nowrap}
+tr.dup td{background:var(--warn-soft)}
+mark{background:var(--warn-soft);color:var(--ink);padding:0 2px;border-radius:3px}
+.summary{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.summary span{font-size:13px;background:var(--ok-soft);color:var(--ok);padding:4px 10px;border-radius:999px}
+form.entry{display:grid;gap:10px;margin-bottom:14px}
+@media(min-width:760px){form.entry{grid-template-columns:repeat(4,1fr) auto;align-items:end}}
+form.entry label{display:flex;flex-direction:column;font-size:12.5px;color:var(--sub);gap:4px}
+form.entry input,form.entry select{font:inherit;font-size:14px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;min-width:0}
+.btn{font:inherit;font-size:14px;border:0;border-radius:8px;background:var(--accent);color:#fff;padding:9px 16px;cursor:pointer}
+.btn.ghost{background:var(--card);color:var(--accent);border:1px solid var(--accent)}
+.sheet-wrap{display:grid;gap:14px}
+@media(min-width:760px){.sheet-wrap{grid-template-columns:3fr 2fr}}
+.sheet-title{font-size:12.5px;color:var(--sub);margin:0 0 6px}
+tr.new td{animation:flash 1.2s ease}
+@keyframes flash{from{background:var(--ok-soft)}to{background:transparent}}
+/* LINE */
+.line-wrap{display:grid;gap:16px}
+@media(min-width:760px){.line-wrap{grid-template-columns:300px 1fr}}
+.phone{border:1px solid var(--line);border-radius:22px;overflow:hidden;background:#8cabd9;max-width:320px;width:100%;margin:0 auto}
+.phone .bar{background:#273246;color:#fff;font-size:13px;padding:10px 14px}
+.talk{height:360px;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.msg{max-width:82%;padding:8px 11px;border-radius:14px;font-size:13.5px;line-height:1.55;white-space:pre-wrap}
+.msg.bot{background:#fff;align-self:flex-start;border-top-left-radius:4px}
+.msg.me{background:#8de055;align-self:flex-end;border-top-right-radius:4px}
+.choices{display:flex;flex-wrap:wrap;gap:6px;align-self:flex-start}
+.choices button{font:inherit;font-size:12.5px;border:1px solid var(--line-green);color:#05843c;background:#fff;border-radius:999px;padding:5px 11px;cursor:pointer}
+.menu{display:grid;grid-template-columns:repeat(3,1fr);background:#fff;border-top:1px solid var(--line)}
+.menu button{font:inherit;font-size:12px;border:0;border-right:1px solid var(--line);background:#fff;padding:12px 4px;cursor:pointer;color:var(--ink)}
+.menu button:last-child{border-right:0}
+.menu6{grid-template-columns:repeat(3,1fr)}
+.menu6 button{border-bottom:1px solid var(--line);line-height:1.35;padding:9px 4px;min-height:52px}
+.menu6 button:nth-child(3n){border-right:0}
+.menu6 small{font-size:10px;color:#05843c}
+.cardmsg{align-self:flex-start;background:#fff;border-radius:14px;overflow:hidden;width:82%;font-size:13px}
+.cardmsg .top{background:#e9f8ef;padding:12px;text-align:center}
+.cardmsg .big{font-size:22px;font-weight:700;color:#05843c;line-height:1.2}
+.cardmsg .body{padding:8px 12px;color:var(--sub)}
+.stamps{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;padding:10px 12px}
+.stamps i{display:grid;place-items:center;aspect-ratio:1;border:1.5px dashed #9bd7b0;border-radius:50%;font-style:normal;font-size:11px;color:#9bd7b0}
+.stamps i.on{background:var(--line-green);border-color:var(--line-green);color:#fff}
+.flow{margin:0;padding-left:0;list-style:none;counter-reset:f}
+.flow li{position:relative;padding:8px 10px 8px 40px;border-left:2px solid var(--line);margin-left:14px;font-size:14px}
+.flow li::before{counter-increment:f;content:counter(f);position:absolute;left:-14px;top:8px;width:26px;height:26px;border-radius:50%;background:var(--line-green);color:#fff;font-size:12.5px;display:grid;place-items:center}
+.deck{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--bg)}
+.slide{display:none;aspect-ratio:16/9;background:#fff;border:1px solid var(--line);border-radius:8px;padding:4.5% 6%;overflow:hidden;flex-direction:column;gap:14px}
+.slide.on{display:flex}
+@media(max-width:620px){.slide{aspect-ratio:auto}}
+.s-cover{flex:1;display:flex;flex-direction:column;justify-content:center;gap:12px}
+.s-title{font-size:clamp(22px,3.6vw,34px);font-weight:700;line-height:1.4;margin:0}
+.s-small{font-size:13px;color:var(--sub);margin:0}
+.s-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.s-kpis div{border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.s-kpis b{display:block;font-size:clamp(18px,2.6vw,26px);line-height:1.3}
+.s-kpis span{font-size:12px;color:var(--sub)}
+.s-head{font-size:clamp(17px,2.4vw,22px);font-weight:700;margin:0;padding-bottom:6px;border-bottom:2px solid var(--ink)}
+.s-cols{flex:1;display:grid;gap:18px;align-content:center}
+@media(min-width:620px){.s-cols{grid-template-columns:1fr 1fr;align-items:center}}
+.s-list{margin:0;padding-left:20px;font-size:clamp(14px,1.75vw,17px);line-height:1.7}
+.s-list li{margin-bottom:8px}
+.s-take{margin:0;padding:10px 14px;border-left:4px solid var(--ink);background:var(--bg);font-size:clamp(13.5px,1.6vw,16px);font-weight:600}
+.s-chart{border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.s-chart .bar{display:grid;grid-template-columns:64px 1fr 62px;align-items:center;gap:10px;margin:12px 0;font-size:13.5px}
+.s-chart .bar i{display:block;height:22px;background:#94a3b8;border-radius:3px}
+.s-chart .bar i.after{background:var(--accent)}
+.s-chart .bar em{font-style:normal;color:var(--sub)}
+.deck-nav{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:10px;font-size:13px;color:var(--sub)}
+.deck-nav .btn{padding:6px 14px}
+footer{color:var(--sub);font-size:12.5px;padding:8px 0 40px}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>事務サポートの作業見本</h1>
+    <p class="lead">AI（Claude Code）を使い、事務作業を速く、正確に進めた見本です。掲載の会社名・人名・数字は、すべて架空のデータです。</p>
+    <ul class="tags">
+      <li>資料・議事録の整理</li><li>データ入力・整理</li><li>スプレッドシートの自動反映</li><li>LINE公式アカウントの構築</li><li>資料作成</li>
+    </ul>
+    <nav class="toc" aria-label="目次">
+      <a href="#memo">1. 打ち合わせメモの整理</a><a href="#data">2. データ整理</a><a href="#sheet">3. 自動反映</a><a href="#line">4. LINE公式アカウント</a><a href="#report">5. 資料作成</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section id="memo">
+  <h2><span class="no">1</span>打ち合わせメモの整理</h2>
+  <p class="what">話しながら取ったメモを、「決まったこと」「次の作業（担当・期限）」「確認が必要なこと」に分けて共有します。</p>
+  <div class="toggle" role="group" aria-label="表示の切り替え">
+    <button type="button" data-memo="before" aria-pressed="false">整理前</button>
+    <button type="button" data-memo="after" aria-pressed="true">整理後</button>
+  </div>
+  <div id="memo-before" class="memo" hidden>来月の展示会、ブースは前回と同じ大きさで。パンフは300部、印刷は田中さんが手配。申込の締切は5/20なので来週中に。名刺は各自100枚あるか確認。搬入は前日15時から。予算は前回の1割増しまで。SNSの告知は2週間前から、投稿文は山田さんの案で。ノベルティどうするかは次回。</div>
+  <div id="memo-after" class="grid3">
+    <div class="box ok"><h3>決まったこと</h3><ul><li>ブースは前回と同じ大きさ</li><li>パンフレットは300部</li><li>搬入は前日15時から</li><li>予算は前回の1割増しまで</li><li>SNSの告知は2週間前から（投稿文は山田さん案）</li></ul></div>
+    <div class="box todo"><h3>次の作業</h3><ul><li>出展の申込：担当未定・<b>5/20締切</b>（来週中に）</li><li>パンフレットの印刷手配：田中さん</li><li>名刺の残数確認：各自（100枚）</li><li>告知の投稿予約：山田さん・告知開始日まで</li></ul></div>
+    <div class="box ask"><h3>確認が必要なこと</h3><ul><li>申込の担当者は誰か</li><li>ノベルティの有無（次回の打ち合わせで決める）</li></ul></div>
+  </div>
+  <p class="point"><b>工夫した点：</b>「担当未定」「次回決める」を残さず拾い、確認が必要なことを別に分けています。締切は太字にして見落としを防ぎます。</p>
+</section>
+
+<section id="data">
+  <h2><span class="no">2</span>データ整理（顧客リスト）</h2>
+  <p class="what">会社名の表記ゆれ・重複・電話番号の形式のばらつきを直し、そのまま使える一覧にします。</p>
+  <div class="toggle" role="group" aria-label="表示の切り替え">
+    <button type="button" data-data="before" aria-pressed="true">整理前</button>
+    <button type="button" data-data="after" aria-pressed="false">整理後</button>
+  </div>
+  <div class="tbl" id="data-before">
+    <table><thead><tr><th>会社名</th><th>担当者</th><th>電話番号</th><th>メール</th></tr></thead><tbody>
+      <tr><td><mark>(株)</mark>サンプル商事</td><td>佐藤</td><td><mark>0312345678</mark></td><td>sato@sample-shoji.example</td></tr>
+      <tr class="dup"><td>株式会社サンプル商事</td><td>佐藤</td><td>03-1234-5678</td><td><mark>SATO@sample-shoji.example</mark></td></tr>
+      <tr><td>みどり<mark>ﾃﾞｻﾞｲﾝ</mark></td><td>鈴木</td><td><mark>０６－２２２２－３３３３</mark></td><td>suzuki@midori.example</td></tr>
+      <tr><td>ひかり工房<mark>　</mark></td><td>高橋</td><td>092-555-0101</td><td>takahashi@hikari.example</td></tr>
+      <tr class="dup"><td>ひかり工房</td><td>高橋</td><td>092-555-0101</td><td>takahashi@hikari.example</td></tr>
+      <tr><td>あおば<mark>(有)</mark></td><td>伊藤</td><td>045-777-8888</td><td><mark>（空欄）</mark></td></tr>
+    </tbody></table>
+  </div>
+  <div class="tbl" id="data-after" hidden>
+    <table><thead><tr><th>会社名</th><th>担当者</th><th>電話番号</th><th>メール</th><th>メモ</th></tr></thead><tbody>
+      <tr><td>株式会社サンプル商事</td><td>佐藤</td><td>03-1234-5678</td><td>sato@sample-shoji.example</td><td>重複1件をまとめた</td></tr>
+      <tr><td>みどりデザイン</td><td>鈴木</td><td>06-2222-3333</td><td>suzuki@midori.example</td><td></td></tr>
+      <tr><td>ひかり工房</td><td>高橋</td><td>092-555-0101</td><td>takahashi@hikari.example</td><td>重複1件をまとめた</td></tr>
+      <tr><td>有限会社あおば</td><td>伊藤</td><td>045-777-8888</td><td>未登録</td><td>メールの確認が必要</td></tr>
+    </tbody></table>
+  </div>
+  <div class="summary"><span>6件 → 4件（重複2件をまとめた）</span><span>表記ゆれ4か所を統一</span><span>電話番号の形式をそろえた</span><span>空欄は「確認が必要」と明記</span></div>
+  <p class="point"><b>工夫した点：</b>消したり推測で埋めたりせず、何を直したかをメモ欄に残します。空欄は勝手に埋めず、確認が必要なこととして返します。</p>
+</section>
+
+<section id="sheet">
+  <h2><span class="no">3</span>スプレッドシートへの自動反映（動く見本）</h2>
+  <p class="what">入力すると、一覧と集計が自動で更新されます。実際の業務では、Googleスプレッドシートと Google Apps Script（GAS）で同じ流れを作ります。</p>
+  <form class="entry" id="entry">
+    <label>日付<input type="date" name="date" required></label>
+    <label>項目<select name="item"><option>交通費</option><option>消耗品</option><option>通信費</option><option>会議費</option></select></label>
+    <label>金額（円）<input type="number" name="amount" min="1" step="1" required placeholder="例）1200"></label>
+    <label>担当<select name="who"><option>佐藤</option><option>鈴木</option><option>高橋</option></select></label>
+    <button class="btn" type="submit">記録する</button>
+  </form>
+  <div class="sheet-wrap">
+    <div>
+      <p class="sheet-title">経費の一覧（自動で追加）</p>
+      <div class="tbl"><table><thead><tr><th>日付</th><th>項目</th><th>金額</th><th>担当</th></tr></thead><tbody id="rows"></tbody></table></div>
+    </div>
+    <div>
+      <p class="sheet-title">担当ごとの合計（自動で集計）</p>
+      <div class="tbl"><table style="min-width:0"><thead><tr><th>担当</th><th>件数</th><th>合計</th></tr></thead><tbody id="sum"></tbody></table></div>
+    </div>
+  </div>
+  <p class="point"><b>工夫した点：</b>入力の段階で金額の空欄・0円をはじき、集計がずれないようにしています。仕事でも、顧客情報や進捗のデータをスプレッドシートへ自動で反映する仕組みを担当しています。</p>
+</section>
+
+<section id="line">
+  <h2><span class="no">4</span>LINE公式アカウントの構築（エルメ等のツールでの設定一式）</h2>
+  <p class="what">架空の整体院のLINE公式アカウントを、店の運用に必要な機能ひとそろいで作った見本です。下のリッチメニューを押すと、実際の動きを試せます。仕事では、LINE公式アカウントでの採用受付・自動応答と面談管理の自動化を、設計から稼働確認まで担当しました。ノーコードのツール（エルメ）でも、自動応答を一式作った経験があります。</p>
+  <div class="line-wrap">
+    <div class="phone">
+      <div class="bar">からだ整体院 サンプル（架空）</div>
+      <div class="talk" id="talk" aria-live="polite"></div>
+      <div class="menu menu6">
+        <button type="button" data-start="reserve">予約する</button><button type="button" data-start="survey">アンケート<br><small>初回500円OFF</small></button><button type="button" data-start="point">ポイント<br>カード</button>
+        <button type="button" data-start="menu">メニュー<br>・料金</button><button type="button" data-start="faq">よくある<br>質問</button><button type="button" data-start="access">アクセス</button>
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:15px;margin:0 0 8px">設定した機能（ツールでの設定一式）</h3>
+      <ol class="flow">
+        <li><b>あいさつメッセージ</b>：友だち追加の直後に、特典とアンケートを案内</li>
+        <li><b>アンケート</b>：3問をボタンで回答 → 回答した人に<b>クーポン</b>を自動で送る</li>
+        <li><b>回答で出し分ける配信</b>：お悩み（肩こり・腰・姿勢）ごとに、届く案内を変える</li>
+        <li><b>6分割のリッチメニュー</b>：予約・アンケート・ポイント・料金・質問・アクセス</li>
+        <li><b>予約の導線</b>：コース → 日にち → 確認 → 確定。「やり直す」でいつでも最初へ</li>
+        <li><b>ポイントカード</b>：来院ごとにポイント（1日1回まで）、5ポイントで特典</li>
+        <li><b>リマインド</b>：予約の前日に自動で案内。予約内容はシートにも記録</li>
+      </ol>
+      <p class="point"><b>工夫した点：</b>店の目的（初回の来院を増やす・2回目につなげる）から逆算して、機能の順番と文面を決めています。引き渡す前に、すべてのボタンを押して、動作と送信の記録を確かめます。</p>
+    </div>
+  </div>
+</section>
+
+<section id="report">
+  <h2><span class="no">5</span>資料作成（業務改善の提案資料・3ページ）</h2>
+  <p class="what">現状の数字から課題を示し、改善案と効果、進め方までを3ページにまとめた見本です。矢印で、ページをめくれます。</p>
+  <div class="deck" id="deck">
+    <div class="slide on">
+      <div class="s-cover">
+        <p class="s-small">サンプル商事 御中（架空）</p>
+        <p class="s-title">経費精算の手間を、<br>月12時間から月4時間へ</p>
+        <p class="s-small">業務改善のご提案｜3ページ</p>
+        <div class="s-kpis">
+          <div><b>月120件</b><span>経費の申請（今）</span></div>
+          <div><b>6分 → 2分</b><span>1件あたりの作業</span></div>
+          <div><b>月8時間</b><span>削減できる時間</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="slide">
+      <p class="s-head">1. 現状と課題</p>
+      <div class="s-cols">
+        <ul class="s-list">
+          <li>経費の申請は月120件。紙で集めて、担当者が1件ずつ手入力</li>
+          <li>1件あたり約6分 → <b>月12時間</b></li>
+          <li>転記のミスが月4件。差し戻しでさらに時間がかかる</li>
+        </ul>
+        <div class="s-chart" aria-label="1件あたりの作業時間">
+          <p class="s-small">1件あたりの作業（分）</p>
+          <div class="bar"><span>回収</span><i style="width:33%"></i><em>2</em></div>
+          <div class="bar"><span>手入力</span><i style="width:50%"></i><em>3</em></div>
+          <div class="bar"><span>確認</span><i style="width:17%"></i><em>1</em></div>
+        </div>
+      </div>
+      <p class="s-take">→ 時間の半分は「手入力」。ここをなくすのが一番の近道です。</p>
+    </div>
+    <div class="slide">
+      <p class="s-head">2. 改善案と効果・進め方</p>
+      <div class="s-cols">
+        <ul class="s-list">
+          <li>申請はフォームから入力 → <b>シートに自動で反映</b>（手入力をなくす）</li>
+          <li>担当者は、反映された内容の確認だけ</li>
+          <li>1件あたり約2分 → <b>月4時間（月8時間の削減）</b></li>
+          <li>進め方：1週目は1部署で試す → 2週目に全員へ。紙の申請も1か月は受け付ける（元に戻せる形）</li>
+        </ul>
+        <div class="s-chart" aria-label="月の作業時間の比較">
+          <p class="s-small">月の作業時間</p>
+          <div class="bar"><span>今</span><i style="width:100%"></i><em>12時間</em></div>
+          <div class="bar"><span>改善後</span><i class="after" style="width:33%"></i><em>4時間</em></div>
+        </div>
+      </div>
+      <p class="s-take">→ 年間で約96時間の削減。1部署で試してから広げるので、元に戻すこともできます。</p>
+    </div>
+    <div class="deck-nav">
+      <button type="button" class="btn ghost" id="prev" aria-label="前のページ">←</button>
+      <span id="pg">1 / 3</span>
+      <button type="button" class="btn ghost" id="next" aria-label="次のページ">→</button>
+    </div>
+  </div>
+  <p class="point"><b>工夫した点：</b>1ページ目に結論（月12時間→4時間）を置き、数字の根拠と、試して戻せる進め方までをセットにしています。文字は少なく、比べる数字は図にしています。</p>
+</section>
+
+</main>
+<footer class="wrap">掲載の会社名・人名・数字・メールアドレスは、すべて架空です。使用ツール：Claude Code／Googleスプレッドシート／Google Apps Script／LINE公式アカウント／Chatwork</footer>
+
+<script>
+(()=>{
+  // 1・2 の切り替え
+  function bindToggle(attr, ids){
+    document.querySelectorAll(`[data-${attr}]`).forEach(b=>b.addEventListener('click',()=>{
+      document.querySelectorAll(`[data-${attr}]`).forEach(x=>x.setAttribute('aria-pressed', x===b?'true':'false'));
+      Object.entries(ids).forEach(([k,id])=>{document.getElementById(id).hidden = (k!==b.dataset[attr]);});
+    }));
+  }
+  bindToggle('memo',{before:'memo-before',after:'memo-after'});
+  bindToggle('data',{before:'data-before',after:'data-after'});
+
+  // 5 資料（ページめくり）
+  const slides=[...document.querySelectorAll('#deck .slide')];let cur=0;
+  function go(n){cur=(n+slides.length)%slides.length;slides.forEach((s,i)=>s.classList.toggle('on',i===cur));document.getElementById('pg').textContent=`${cur+1} / ${slides.length}`;}
+  document.getElementById('prev').addEventListener('click',()=>go(cur-1));
+  document.getElementById('next').addEventListener('click',()=>go(cur+1));
+
+  // 3 自動反映
+  const rows=[['2026-05-08','交通費',1280,'佐藤'],['2026-05-09','消耗品',3300,'鈴木'],['2026-05-12','会議費',4500,'佐藤']];
+  const yen=n=>n.toLocaleString('ja-JP')+'円';
+  const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  function render(newIdx){
+    document.getElementById('rows').innerHTML=rows.map((r,i)=>`<tr class="${i===newIdx?'new':''}"><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td>${yen(r[2])}</td><td>${esc(r[3])}</td></tr>`).join('');
+    const sum={};rows.forEach(r=>{sum[r[3]]=sum[r[3]]||{n:0,t:0};sum[r[3]].n++;sum[r[3]].t+=r[2];});
+    const total=rows.reduce((a,r)=>a+r[2],0);
+    document.getElementById('sum').innerHTML=Object.entries(sum).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${v.n}件</td><td>${yen(v.t)}</td></tr>`).join('')+`<tr><td><b>合計</b></td><td><b>${rows.length}件</b></td><td><b>${yen(total)}</b></td></tr>`;
+  }
+  const f=document.getElementById('entry');
+  f.date.value='2026-05-13';
+  f.addEventListener('submit',e=>{
+    e.preventDefault();
+    const amt=Math.floor(Number(f.amount.value));
+    if(!f.date.value||!(amt>0)){f.amount.focus();return;}
+    rows.push([f.date.value,f.item.value,amt,f.who.value]);
+    rows.sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0);
+    render(rows.findIndex(r=>r[0]===f.date.value&&r[2]===amt&&r[3]===f.who.value));
+    f.amount.value='';
+  });
+  render(-1);
+
+  // 4 LINE
+  const talk=document.getElementById('talk');
+  let state={};
+  function bot(text, choices){
+    const m=document.createElement('div');m.className='msg bot';m.textContent=text;talk.appendChild(m);
+    if(choices){
+      const c=document.createElement('div');c.className='choices';
+      choices.forEach(([label,fn])=>{const b=document.createElement('button');b.type='button';b.textContent=label;
+        b.addEventListener('click',()=>{c.remove();me(label);setTimeout(fn,350);});c.appendChild(b);});
+      talk.appendChild(c);
+    }
+    talk.scrollTop=talk.scrollHeight;
+  }
+  function me(text){const m=document.createElement('div');m.className='msg me';m.textContent=text;talk.appendChild(m);talk.scrollTop=talk.scrollHeight;}
+  function card(html){const c=document.createElement('div');c.className='cardmsg';c.innerHTML=html;talk.appendChild(c);talk.scrollTop=talk.scrollHeight;return c;}
+  const restart=['やり直す',()=>startReserve()];
+  function startReserve(){
+    state.r={};
+    bot('ご予約ですね。\nコースをお選びください。',[['60分 整体',()=>pickDay('60分 整体')],['30分 肩こり集中',()=>pickDay('30分 肩こり集中')],['初回お試し',()=>pickDay('初回お試し')]]);
+  }
+  function pickDay(c){
+    state.r.course=c;
+    bot(`「${c}」ですね。\nご希望の日をお選びください（空いている日だけ表示しています）。`,[['6/3（火）',()=>confirmR('6/3（火）')],['6/5（木）',()=>confirmR('6/5（木）')],['6/7（土）',()=>confirmR('6/7（土）')],restart]);
+  }
+  function confirmR(day){
+    state.r.day=day;
+    bot(`ご予約内容の確認です。\nコース：${state.r.course}\n日にち：${day} 11:00\nこの内容でよろしいですか？`,[['確定する',()=>bot(`ご予約を受け付けました。\n前日にリマインドをお送りします。\n\n（管理側：予約一覧のシートに「${state.r.day}・${state.r.course}」が自動で記録されます）`)],restart]);
+  }
+  // アンケート → クーポン → 回答で出し分け
+  function startSurvey(){
+    if(state.coupon){bot('アンケートはご回答済みです。\nクーポンはトーク画面の上の方にあります。');return;}
+    state.s={};
+    bot('【1/3】ご年代を教えてください。',['20代','30代','40代','50代以上'].map(a=>[a,()=>{state.s.age=a;q2();}]));
+  }
+  function q2(){bot('【2/3】いちばんのお悩みは？',['肩こり','腰の痛み','姿勢・猫背'].map(a=>[a,()=>{state.s.worry=a;q3();}]));}
+  function q3(){bot('【3/3】ご来院の希望は？',['平日の昼','平日の夜','土日'].map(a=>[a,()=>{state.s.when=a;giveCoupon();}]));}
+  function giveCoupon(){
+    state.coupon=true;
+    bot('ご回答ありがとうございました。\n初回500円OFFのクーポンをお送りします。');
+    card('<div class="top"><div>LINE友だち限定</div><div class="big">初回500円OFF</div></div><div class="body">利用条件：初回のご来院のみ（架空のクーポン）</div>');
+    const tips={'肩こり':'デスクワークの合間にできる、肩回しのコツ','腰の痛み':'座り方を変えるだけで楽になる、腰のケア','姿勢・猫背':'スマホを見る時の、首の角度の目安'};
+    setTimeout(()=>bot(`（回答で出し分ける配信の例）\n「${state.s.worry}」とお答えの方には、\n「${tips[state.s.worry]}」をお届けします。\nご希望の「${state.s.when}」の空き枠もお知らせします。`),700);
+  }
+  // ポイントカード
+  function showPoint(){
+    const c=card('<div class="top"><div>ポイントカード</div><div class="body" style="padding:2px 0 0">5ポイントで、次回30分延長</div></div><div class="stamps">'+[1,2,3,4,5].map(i=>`<i class="${i<=state.pt?'on':''}">${i}</i>`).join('')+'</div>');
+    bot(state.ptToday?'本日のポイントは付与済みです（1日1回まで）。':'ご来院ありがとうございます。',state.ptToday?null:[['来院ポイントを受け取る',()=>{state.pt=Math.min(5,state.pt+1);state.ptToday=true;showPoint();if(state.pt>=5)bot('5ポイントたまりました！\n次回のご予約で30分延長が使えます。');}]]);
+  }
+  document.querySelectorAll('[data-start]').forEach(b=>b.addEventListener('click',()=>{
+    const k=b.dataset.start; me(b.innerText.replace(/\n/g,''));
+    setTimeout(()=>{
+      if(k==='reserve')startReserve();
+      else if(k==='survey')startSurvey();
+      else if(k==='point')showPoint();
+      else if(k==='menu')bot('メニュー・料金（架空）\n60分 整体 6,600円\n30分 肩こり集中 3,850円\n初回お試し 4,400円');
+      else if(k==='faq')bot('よくある質問です。\n知りたい項目を選んでください。',[['服装は？',()=>bot('動きやすい服でお越しください。お着替えもご用意しています。')],['予約の変更は？',()=>bot('前日までに、このLINEの「予約する」から変更できます。')],['支払い方法は？',()=>bot('現金・クレジットカード・QRコード決済が使えます。')]]);
+      else bot('アクセス（架空）\nサンプル駅から徒歩3分です。');
+    },350);
+  }));
+  state={pt:2,ptToday:false,coupon:false};
+  bot('友だち追加ありがとうございます。\nからだ整体院 サンプルです（架空の店）。\n\n下のメニューの「アンケート」（3問・30秒）に答えると、初回500円OFFのクーポンをお送りします。');
+})();
+</script>
+</body>
+</html>
