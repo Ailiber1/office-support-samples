@@ -28,6 +28,11 @@ section{background:var(--card);border:1px solid var(--line);border-radius:var(--
 section h2{font-size:19px;margin:0 0 4px;line-height:1.45}
 section h2 .no{display:inline-block;min-width:28px;color:var(--accent)}
 .what{color:var(--sub);margin:0 0 14px;font-size:14px}
+.real{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 8px;margin:2px 0 10px;font-size:13px;color:var(--sub)}
+.real b{font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.real b.yes{background:var(--ok-soft);color:var(--ok)}
+.real b.near{background:var(--accent-soft);color:var(--accent)}
+.real b.sample{background:var(--warn-soft);color:var(--warn)}
 .point{background:var(--bg);border-radius:8px;padding:10px 12px;font-size:13.5px;color:var(--sub);margin-top:14px}
 .point b{color:var(--ink)}
 .toggle{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;margin-bottom:12px}
@@ -119,7 +124,7 @@ footer{color:var(--sub);font-size:12.5px;padding:8px 0 40px}
 <header>
   <div class="wrap">
     <h1>事務サポートの作業見本</h1>
-    <p class="lead">AI（Claude Code）を使い、事務作業を速く、正確に進めた見本です。掲載の会社名・人名・数字は、すべて架空のデータです。</p>
+    <p class="lead">実際の業務で行っている作業と、同じ考え方で作った見本です（AI＝Claude Code を使って作成）。データはすべて架空です。見本ごとに、実務との関係を書いています。</p>
     <ul class="tags">
       <li>資料・議事録の整理</li><li>データ入力・整理</li><li>スプレッドシートの自動反映</li><li>LINE公式アカウントの構築</li><li>資料作成</li>
     </ul>
@@ -133,6 +138,7 @@ footer{color:var(--sub);font-size:12.5px;padding:8px 0 40px}
 
 <section id="memo">
   <h2><span class="no">1</span>打ち合わせメモの整理</h2>
+  <p class="real"><b class="yes">実務で担当</b>今のアルバイト（完全在宅）で、打ち合わせを文字起こしして「決まったこと」と「次の作業」に分けて共有しています</p>
   <p class="what">話しながら取ったメモを、「決まったこと」「次の作業（担当・期限）」「確認が必要なこと」に分けて共有します。</p>
   <div class="toggle" role="group" aria-label="表示の切り替え">
     <button type="button" data-memo="before" aria-pressed="false">整理前</button>
@@ -149,6 +155,7 @@ footer{color:var(--sub);font-size:12.5px;padding:8px 0 40px}
 
 <section id="data">
   <h2><span class="no">2</span>データ整理（顧客リスト）</h2>
+  <p class="real"><b class="near">近い実務あり</b>契約社員として、データ入力・管理の業務に約11か月携わりました</p>
   <p class="what">会社名の表記ゆれ・重複・電話番号の形式のばらつきを直し、そのまま使える一覧にします。</p>
   <div class="toggle" role="group" aria-label="表示の切り替え">
     <button type="button" data-data="before" aria-pressed="true">整理前</button>
@@ -178,6 +185,7 @@ footer{color:var(--sub);font-size:12.5px;padding:8px 0 40px}
 
 <section id="sheet">
   <h2><span class="no">3</span>スプレッドシートへの自動反映（動く見本）</h2>
+  <p class="real"><b class="yes">実務で担当</b>今のアルバイトで、顧客情報や進捗のデータをスプレッドシートへ自動で反映する仕組みを担当しています</p>
   <p class="what">入力すると、一覧と集計が自動で更新されます。実際の業務では、Googleスプレッドシートと Google Apps Script（GAS）で同じ流れを作ります。</p>
   <form class="entry" id="entry">
     <label>日付<input type="date" name="date" required></label>
@@ -196,12 +204,13 @@ footer{color:var(--sub);font-size:12.5px;padding:8px 0 40px}
       <div class="tbl"><table style="min-width:0"><thead><tr><th>担当</th><th>件数</th><th>合計</th></tr></thead><tbody id="sum"></tbody></table></div>
     </div>
   </div>
-  <p class="point"><b>工夫した点：</b>入力の段階で金額の空欄・0円をはじき、集計がずれないようにしています。仕事でも、顧客情報や進捗のデータをスプレッドシートへ自動で反映する仕組みを担当しています。</p>
+  <p class="point"><b>工夫した点：</b>入力の段階で金額の空欄・0円をはじき、集計がずれないようにしています。</p>
 </section>
 
 <section id="line">
   <h2><span class="no">4</span>LINE公式アカウントの構築（エルメ等のツールでの設定一式）</h2>
-  <p class="what">架空の整体院のLINE公式アカウントを、店の運用に必要な機能ひとそろいで作った見本です。下のリッチメニューを押すと、実際の動きを試せます。仕事では、LINE公式アカウントでの採用受付・自動応答と面談管理の自動化を、設計から稼働確認まで担当しました。ノーコードのツール（エルメ）でも、自動応答を一式作った経験があります。</p>
+  <p class="real"><b class="yes">実務で担当</b>採用受付・自動応答・面談管理の自動化（設計から稼働確認まで）<b class="sample">見本として作成</b>クーポン・ポイントなど店舗向けの機能（店舗の運用を任された経験はありませんが、構築から運用まで挑戦したいと考えています）</p>
+  <p class="what">架空の整体院のLINE公式アカウントを、店の運用に必要な機能ひとそろいで作った見本です。下のリッチメニューを押すと、実際の動きを試せます。ノーコードのツール（エルメ）でも、自動応答を一式作った経験があります。</p>
   <div class="line-wrap">
     <div class="phone">
       <div class="bar">からだ整体院 サンプル（架空）</div>
@@ -229,6 +238,7 @@ footer{color:var(--sub);font-size:12.5px;padding:8px 0 40px}
 
 <section id="report">
   <h2><span class="no">5</span>資料作成（業務改善の提案資料・3ページ）</h2>
+  <p class="real"><b class="sample">見本として作成</b>業務の見直しを実績をもとに提案し、承認された経験はありますが、提案資料の作成を仕事として任された経験はありません。この見本の形で、資料作成にも挑戦したいと考えています</p>
   <p class="what">現状の数字から課題を示し、改善案と効果、進め方までを3ページにまとめた見本です。矢印で、ページをめくれます。</p>
   <div class="deck" id="deck">
     <div class="slide on">
